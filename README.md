@@ -1,4 +1,4 @@
-<a href="https://dismxo.github.io/outside-resolve/"><img src="docs/banner.png" alt="Outside Resolve: your Editor Keyboard, outside Resolve"></a>
+<a href="https://dismxo.github.io/outside-resolve/"><img src="docs/readme-banner.png" alt="Outside Resolve: your Editor Keyboard, outside Resolve"></a>
 
 <p align="center">
   The search dial runs volume, scroll and zoom. Every editing key runs a macro.<br>
