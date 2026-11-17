@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Packaging into OutsideResolve.exe
+pyinstaller>=6.3.0
+
+# Only for discovery.py. This is the "hidapi" package (import hid -> hid.device()),
+# not the similarly named "hid" package.
+hidapi>=0.14
