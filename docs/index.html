@@ -137,7 +137,7 @@ p{margin:0}
 .ruler::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;border-radius:3px;background:
   linear-gradient(90deg,transparent 0 calc(10% * var(--z)),rgba(136,163,220,.2) calc(10% * var(--z)) calc(46% * var(--z)),transparent 0)}
 
-.dial-well{width:min(78vw,340px);aspect-ratio:1;border-radius:50%;padding:7%;
+.dial-well{--dsz:min(78vw,340px);width:var(--dsz);height:var(--dsz);flex:none;border-radius:50%;padding:calc(var(--dsz) * .07);
   background:radial-gradient(circle,#060607 58%,#111215 70%,#1a1c21 71%,#121317 100%);
   box-shadow:inset 0 3px 10px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06)}
 .dial{width:100%;height:100%;border-radius:50%;cursor:grab;touch-action:none;position:relative;outline-offset:8px;
@@ -148,7 +148,7 @@ p{margin:0}
 .dial-face{position:absolute;inset:7%;border-radius:50%;
   background:radial-gradient(circle at 45% 30%,#2a2d33,#1a1c21 45%,#141519 75%,#1e2025 100%);
   box-shadow:inset 0 2px 1px rgba(255,255,255,.08),inset 0 -6px 14px rgba(0,0,0,.45),0 0 0 1px #111}
-.dial-dimple{position:absolute;left:50%;top:17%;width:19%;aspect-ratio:1;translate:-50% 0;border-radius:50%;
+.dial-dimple{position:absolute;left:50%;top:17%;width:19%;height:19%;translate:-50% 0;border-radius:50%;
   background:radial-gradient(circle at 50% 70%,#2b2e34,#0e0f12 75%);box-shadow:inset 0 3px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.07)}
 .dial-tick{position:absolute;left:50%;top:5%;width:3px;height:7%;translate:-50% 0;border-radius:2px;background:var(--led);box-shadow:0 1px 1px rgba(0,0,0,.6)}
 .hint{font-size:.9rem;color:var(--ink-3);text-align:center;max-width:30em}
