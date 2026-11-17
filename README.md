@@ -6,9 +6,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dismxo/outside-resolve/releases/latest"><img alt="Download" src="https://img.shields.io/github/v/release/dismxo/outside-resolve?label=download&color=ffae38&labelColor=211f1c&style=for-the-badge"></a>
-  <img alt="Windows" src="https://img.shields.io/badge/windows-10%20%C2%B7%2011-312f2b?labelColor=211f1c&style=for-the-badge">
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-312f2b?labelColor=211f1c&style=for-the-badge"></a>
+  <a href="https://github.com/dismxo/outside-resolve/releases/latest"><img alt="Download" src="https://img.shields.io/github/v/release/dismxo/outside-resolve?label=download&color=5b7cc2&labelColor=121317&style=for-the-badge"></a>
+  <img alt="Windows" src="https://img.shields.io/badge/windows-10%20%C2%B7%2011-1f2126?labelColor=121317&style=for-the-badge">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-1f2126?labelColor=121317&style=for-the-badge"></a>
 </p>
 
 <p align="center">

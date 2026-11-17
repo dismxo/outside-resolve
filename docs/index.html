@@ -8,7 +8,7 @@
 <meta property="og:title" content="Outside Resolve">
 <meta property="og:description" content="Use the DaVinci Resolve Editor Keyboard everywhere else. Dial for volume, scroll and zoom; every editing key a macro.">
 <meta property="og:image" content="https://dismxo.github.io/outside-resolve/screenshot.png">
-<meta name="theme-color" content="#161513">
+<meta name="theme-color" content="#070708">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='2' width='60' height='60' rx='14' fill='%231f2430'/%3E%3Ccircle cx='32' cy='32' r='16' fill='%233d8bfd'/%3E%3Ccircle cx='32' cy='12' r='3' fill='%23eaf2ff'/%3E%3C/svg%3E">
 <style>
 @font-face{font-family:"Barlow";src:url(fonts/Barlow-400.woff2) format("woff2");font-weight:400;font-display:swap}
@@ -19,20 +19,21 @@
 @font-face{font-family:"JetBrains Mono";src:url(fonts/JetBrainsMono-400.woff2) format("woff2");font-weight:400;font-display:swap}
 
 :root{
-  --ground:#161513;
-  --deck:#211f1c;
-  --deck-hi:#2a2824;
-  --inset:#0f0e0d;
-  --cap:#312f2b;
-  --cap-top:#3e3b36;
-  --cap-skirt:#151412;
-  --line:#2e2c28;
-  --ink:#ece9e3;
-  --ink-2:#b0ada6;
-  --ink-3:#9c9992;
-  --led:#ffae38;
-  --led-ink:#1d1406;
-  --led-dim:#3a2f1f;
+  --ground:#070708;
+  --deck:#121317;
+  --deck-hi:#1a1c21;
+  --inset:#050506;
+  --cap:#1f2126;
+  --cap-top:#2a2d33;
+  --cap-skirt:#060607;
+  --line:#202228;
+  --ink:#f3f3f5;
+  --ink-2:#a7a9b0;
+  --ink-3:#8b8d94;
+  --led:#88a3dc;
+  --accent:#6f8fd2;
+  --led-ink:#0c0d12;
+  --led-dim:#1c2333;
   --display:"Barlow Condensed","Arial Narrow",sans-serif;
   --text:"Barlow",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
@@ -42,14 +43,15 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{scrollbar-color:#3e3b36 var(--ground);-webkit-text-size-adjust:100%}
+html{scrollbar-color:#2a2d33 var(--ground);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--ground);color:var(--ink);font:400 1.0625rem/1.6 var(--text);caret-color:var(--led)}
 ::selection{background:var(--led);color:var(--led-ink)}
 ::-webkit-scrollbar{width:12px;height:12px}
 ::-webkit-scrollbar-track{background:var(--ground)}
-::-webkit-scrollbar-thumb{background:#3e3b36;border-radius:8px;border:3px solid var(--ground)}
-a{color:var(--ink);text-decoration-color:var(--led);text-decoration-thickness:1.5px;text-underline-offset:.22em}
+::-webkit-scrollbar-thumb{background:#2a2d33;border-radius:8px;border:3px solid var(--ground)}
+a{color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:.22em}
 a:hover{color:var(--led)}
+.btn.primary:hover{color:#0c0d12}
 :focus-visible{outline:2px solid var(--led);outline-offset:3px;border-radius:6px}
 img{max-width:100%;display:block}
 code,kbd,pre{font-family:var(--mono);font-size:.86em}
@@ -88,15 +90,15 @@ p{margin:0}
   background:radial-gradient(120% 100% at 75% 0%,var(--deck-hi),var(--deck) 62%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 #0b0b0c,0 40px 80px -30px rgba(0,0,0,.7)}
 .led{display:inline-block;flex:none;width:22px;height:5px;border-radius:3px;background:var(--led-dim);box-shadow:inset 0 1px 1px rgba(0,0,0,.5);transition:background .18s}
-.led.on{background:linear-gradient(180deg,#ffd38a,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
+.led.on{background:linear-gradient(180deg,#dbe6fa,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
 .deck h1{font-size:clamp(2.9rem,6.4vw,5.6rem);font-weight:600;letter-spacing:-.02em;line-height:.95}
-.deck h1 span{display:block;color:var(--led)}
+.deck h1 span{display:block;color:var(--accent)}
 .lead{margin-top:26px;max-width:34em;font-size:clamp(1.05rem,1.4vw,1.2rem);color:var(--ink-2)}
 .lead b{color:var(--ink);font-weight:500}
 .actions{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin-top:34px}
 .btn{display:inline-flex;align-items:center;gap:12px;text-decoration:none;padding:17px 24px 16px;font-size:1.1rem}
-.btn.primary{background:linear-gradient(180deg,#ffc061,var(--led) 70%);color:var(--led-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -2px 0 rgba(0,0,0,.18),0 3px 1px #6e470f,0 10px 22px -6px rgba(0,0,0,.55)}
-.btn.primary:hover{color:var(--led-ink);background:linear-gradient(180deg,#ffcb7a,#ffb648 70%)}
+.btn.primary{background:linear-gradient(180deg,#ffffff,#e6eaf2 70%);color:#0c0d12;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 rgba(12,13,18,.08),0 3px 1px #8a92a3,0 10px 22px -6px rgba(0,0,0,.6)}
+.btn.primary:hover{color:#0c0d12;background:linear-gradient(180deg,#ffffff,#dbe6fa 70%)}
 .btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .quiet{font:600 1rem/1 var(--display);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .quiet svg{width:17px;height:17px;fill:currentColor}
@@ -108,7 +110,7 @@ p{margin:0}
 .modes{display:flex;gap:12px;width:min(100%,380px)}
 .mode{flex:1;display:grid;gap:9px;justify-items:center;padding:12px 0 15px}
 .mode i{width:22px;height:5px;border-radius:3px;background:var(--led-dim);box-shadow:inset 0 1px 1px rgba(0,0,0,.5);transition:background .18s,box-shadow .18s}
-.mode[aria-pressed="true"] i{background:linear-gradient(180deg,#ffd38a,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
+.mode[aria-pressed="true"] i{background:linear-gradient(180deg,#dbe6fa,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
 .mode small{font:500 .78rem/1 var(--text);letter-spacing:.02em;text-transform:none;color:var(--ink-2)}
 .mode[aria-pressed="true"] small{color:var(--ink)}
 
@@ -121,33 +123,33 @@ p{margin:0}
 .ro-pane{position:absolute;inset:0;opacity:0;transition:opacity .2s}
 .readout[data-mode="JOG"] .p-jog,.readout[data-mode="SCRL"] .p-scrl,.readout[data-mode="SHTL"] .p-shtl{opacity:1}
 .segs{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;height:100%;align-items:end}
-.segs span{height:60%;border-radius:2px;background:#2a241b}
+.segs span{height:60%;border-radius:2px;background:#161b26}
 .segs span:nth-child(n+1){height:calc(30% + var(--i) * 2.8%)}
 .segs span.on{background:var(--led)}
-.readout.muted .segs span.on{background:#5a4a33}
+.readout.muted .segs span.on{background:#2c3550}
 .lines{font:400 .8rem/1.55 var(--mono);color:var(--ink-2);will-change:transform}
 .lines div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lines div span{color:var(--ink-3);margin-right:12px}
 .ruler{position:absolute;inset:0;background:
-  repeating-linear-gradient(90deg,rgba(255,174,56,.85) 0 1px,transparent 1px calc(var(--z)*60px)) 0 0/100% 70% no-repeat,
-  repeating-linear-gradient(90deg,rgba(236,233,227,.28) 0 1px,transparent 1px calc(var(--z)*12px)) 0 100%/100% 40% no-repeat;
+  repeating-linear-gradient(90deg,rgba(136,163,220,.85) 0 1px,transparent 1px calc(var(--z)*60px)) 0 0/100% 70% no-repeat,
+  repeating-linear-gradient(90deg,rgba(243,243,245,.28) 0 1px,transparent 1px calc(var(--z)*12px)) 0 100%/100% 40% no-repeat;
   --z:1}
 .ruler::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;border-radius:3px;background:
-  linear-gradient(90deg,transparent 0 calc(10% * var(--z)),rgba(255,174,56,.2) calc(10% * var(--z)) calc(46% * var(--z)),transparent 0)}
+  linear-gradient(90deg,transparent 0 calc(10% * var(--z)),rgba(136,163,220,.2) calc(10% * var(--z)) calc(46% * var(--z)),transparent 0)}
 
 .dial-well{width:min(78vw,340px);aspect-ratio:1;border-radius:50%;padding:7%;
-  background:radial-gradient(circle,#0d0c0b 58%,#1b1a18 70%,#2a2824 71%,#1e1c1a 100%);
+  background:radial-gradient(circle,#060607 58%,#111215 70%,#1a1c21 71%,#121317 100%);
   box-shadow:inset 0 3px 10px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06)}
 .dial{width:100%;height:100%;border-radius:50%;cursor:grab;touch-action:none;position:relative;outline-offset:8px;
-  background:repeating-conic-gradient(from 0deg,#34322e 0 1.6deg,#1c1b19 1.6deg 3.2deg);
+  background:repeating-conic-gradient(from 0deg,#2a2c31 0 1.6deg,#111215 1.6deg 3.2deg);
   box-shadow:0 14px 26px rgba(0,0,0,.6),0 2px 0 rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.08)}
 .dial:active{cursor:grabbing}
 .dial:focus-visible{border-radius:50%}
 .dial-face{position:absolute;inset:7%;border-radius:50%;
-  background:radial-gradient(circle at 45% 30%,#3e3b36,#2a2824 45%,#1f1d1b 75%,#2d2b27 100%);
+  background:radial-gradient(circle at 45% 30%,#2a2d33,#1a1c21 45%,#141519 75%,#1e2025 100%);
   box-shadow:inset 0 2px 1px rgba(255,255,255,.08),inset 0 -6px 14px rgba(0,0,0,.45),0 0 0 1px #111}
 .dial-dimple{position:absolute;left:50%;top:17%;width:19%;aspect-ratio:1;translate:-50% 0;border-radius:50%;
-  background:radial-gradient(circle at 50% 70%,#36332f,#191816 75%);box-shadow:inset 0 3px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.07)}
+  background:radial-gradient(circle at 50% 70%,#2b2e34,#0e0f12 75%);box-shadow:inset 0 3px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.07)}
 .dial-tick{position:absolute;left:50%;top:5%;width:3px;height:7%;translate:-50% 0;border-radius:2px;background:var(--led);box-shadow:0 1px 1px rgba(0,0,0,.6)}
 .hint{font-size:.9rem;color:var(--ink-3);text-align:center;max-width:30em}
 .hint b{font-weight:500;color:var(--ink-2)}
@@ -162,9 +164,9 @@ h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
 /* F-row */
 .frow{margin-top:52px;display:grid;grid-template-columns:minmax(0,1.25fr) repeat(12,minmax(0,1fr));gap:clamp(6px,.8vw,10px)}
 .frow .cap{aspect-ratio:1/.92;display:grid;place-items:center;font-size:clamp(.72rem,1.2vw,1rem);padding:0}
-.frow .fn{position:relative;color:var(--ink-3);background:linear-gradient(180deg,#2a2824,#24221f);cursor:default;aspect-ratio:auto;align-self:stretch}
+.frow .fn{position:relative;color:var(--ink-3);background:linear-gradient(180deg,#1a1c21,#17181c);cursor:default;aspect-ratio:auto;align-self:stretch}
 .frow .fn::after{content:"";position:absolute;left:50%;top:50%;width:min(70%,40px);height:2px;translate:-50% -50%;background:var(--led);rotate:-28deg;border-radius:2px}
-.frow .cap.down{background:linear-gradient(180deg,#4a4741,#383530 70%)}
+.frow .cap.down{background:linear-gradient(180deg,#363a42,#26292f 70%)}
 .frow-note{margin-top:22px;display:inline-flex;align-items:center;gap:14px;padding:12px 18px;border-radius:10px;background:var(--inset);box-shadow:inset 0 2px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.05);font:600 .85rem/1 var(--display);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
 .frow-note output{font:400 .9rem/1 var(--mono);letter-spacing:0;text-transform:none;color:var(--led)}
 
@@ -199,8 +201,8 @@ h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
 .handoff{grid-column:1/-1;position:relative;padding:18px 0 0}
 .track{position:relative;height:56px;border-radius:10px;background:var(--inset);box-shadow:inset 0 2px 6px rgba(0,0,0,.6);overflow:hidden}
 .track .seg{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 16px;font:600 .9rem/1 var(--display);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
-.track .us{background:linear-gradient(180deg,rgba(255,174,56,.22),rgba(255,174,56,.12));color:var(--led)}
-.track .them{background:linear-gradient(180deg,#34322d,#2b2925);color:var(--ink-2)}
+.track .us{background:linear-gradient(180deg,rgba(136,163,220,.22),rgba(136,163,220,.12));color:var(--led)}
+.track .them{background:linear-gradient(180deg,#22252c,#1b1d22);color:var(--ink-2)}
 .track .s1{left:0;width:32%}
 .track .s2{left:32%;width:41%}
 .track .s3{left:73%;right:0}
@@ -250,7 +252,7 @@ pre .p{color:var(--led);user-select:none}
 .close h2{font-size:clamp(2rem,4vw,3.2rem)}
 .close-leds{display:flex;gap:10px;margin-bottom:18px}
 .close-leds i{width:22px;height:5px;border-radius:3px;background:var(--led-dim);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
-.close-leds i.on{background:linear-gradient(180deg,#ffd38a,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
+.close-leds i.on{background:linear-gradient(180deg,#dbe6fa,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
 footer.wrap{padding-top:56px;padding-bottom:64px;color:var(--ink-3);font-size:.92rem;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px}
 footer p+p{margin-top:.6em}
 footer a{color:var(--ink-2)}
@@ -283,7 +285,7 @@ footer a{color:var(--ink-2)}
 
 <header class="wrap rail">
   <a class="mark" href="./" aria-label="Outside Resolve home">
-    <svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13.5" fill="#2e2f34" stroke="#141416"/><circle cx="15" cy="15" r="9" fill="#3b3c42"/><circle cx="15" cy="8.6" r="2.2" fill="#ffae38"/></svg>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13.5" fill="#2e2f34" stroke="#141416"/><circle cx="15" cy="15" r="9" fill="#3b3c42"/><circle cx="15" cy="8.6" r="2.2" fill="#5b7cc2"/></svg>
     Outside Resolve
   </a>
   <nav aria-label="Sections">
