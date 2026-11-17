@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outside Resolve</title>
+<meta name="description" content="A free Windows tray app that makes the Blackmagic DaVinci Resolve Editor Keyboard's search dial and editing keys work everywhere else: volume, scroll, zoom, macros, and F1–F12 without Fn.">
+<meta property="og:title" content="Outside Resolve">
+<meta property="og:description" content="Use the DaVinci Resolve Editor Keyboard everywhere else. Dial for volume, scroll and zoom; every editing key a macro.">
+<meta property="og:image" content="https://dismxo.github.io/outside-resolve/screenshot.png">
+<meta name="theme-color" content="#161513">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='2' width='60' height='60' rx='14' fill='%231f2430'/%3E%3Ccircle cx='32' cy='32' r='16' fill='%233d8bfd'/%3E%3Ccircle cx='32' cy='12' r='3' fill='%23eaf2ff'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Barlow";src:url(fonts/Barlow-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Barlow";src:url(fonts/Barlow-500.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Barlow";src:url(fonts/Barlow-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Barlow Condensed";src:url(fonts/BarlowCondensed-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Barlow Condensed";src:url(fonts/BarlowCondensed-700.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(fonts/JetBrainsMono-400.woff2) format("woff2");font-weight:400;font-display:swap}
+
+:root{
+  --ground:#161513;
+  --deck:#211f1c;
+  --deck-hi:#2a2824;
+  --inset:#0f0e0d;
+  --cap:#312f2b;
+  --cap-top:#3e3b36;
+  --cap-skirt:#151412;
+  --line:#2e2c28;
+  --ink:#ece9e3;
+  --ink-2:#b0ada6;
+  --ink-3:#9c9992;
+  --led:#ffae38;
+  --led-ink:#1d1406;
+  --led-dim:#3a2f1f;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --text:"Barlow",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r-cap:9px;
+  --gutter:clamp(16px,4vw,40px);
+  --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scrollbar-color:#3e3b36 var(--ground);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 1.0625rem/1.6 var(--text);caret-color:var(--led)}
+::selection{background:var(--led);color:var(--led-ink)}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:var(--ground)}
+::-webkit-scrollbar-thumb{background:#3e3b36;border-radius:8px;border:3px solid var(--ground)}
+a{color:var(--ink);text-decoration-color:var(--led);text-decoration-thickness:1.5px;text-underline-offset:.22em}
+a:hover{color:var(--led)}
+:focus-visible{outline:2px solid var(--led);outline-offset:3px;border-radius:6px}
+img{max-width:100%;display:block}
+code,kbd,pre{font-family:var(--mono);font-size:.86em}
+code{background:var(--inset);border:1px solid var(--line);border-radius:5px;padding:.08em .38em;color:var(--ink)}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.02;letter-spacing:-.01em;margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 var(--gutter)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* top rail */
+.rail{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:22px;padding-bottom:22px}
+.mark{display:flex;align-items:center;gap:12px;text-decoration:none;font:700 1.35rem/1 var(--display);letter-spacing:.01em;color:var(--ink)}
+.mark svg{width:30px;height:30px}
+.rail nav{display:flex;gap:clamp(14px,2.6vw,30px);align-items:center}
+.rail nav a{text-decoration:none;font:600 .98rem/1 var(--display);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2)}
+.rail nav a:hover{color:var(--ink)}
+.rail .gh{display:inline-flex;align-items:center;gap:8px}
+.rail .gh svg{width:18px;height:18px;fill:currentColor}
+
+/* keycaps */
+.cap{appearance:none;border:0;cursor:pointer;color:var(--ink);font:600 .95rem/1 var(--display);text-transform:uppercase;letter-spacing:.07em;
+  background:linear-gradient(180deg,var(--cap-top),var(--cap) 70%);border-radius:var(--r-cap);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -2px 0 rgba(0,0,0,.25),0 3px 1px var(--cap-skirt),0 8px 18px rgba(0,0,0,.35);
+  transition:transform .12s var(--ease),box-shadow .12s var(--ease),background .2s}
+.cap:active,.cap.down{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 1px 1px var(--cap-skirt),0 3px 8px rgba(0,0,0,.3)}
+
+/* deck (first viewport) */
+.deck{position:relative;border-radius:22px;background:
+  radial-gradient(120% 90% at 30% 0%,var(--deck-hi),var(--deck) 60%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 #0b0b0c,0 40px 80px -30px rgba(0,0,0,.7);
+  padding:clamp(28px,5vw,64px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,72px);align-items:center;overflow:hidden}
+.deck::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.deck>*{position:relative}
+.deck h1{font-size:clamp(2.9rem,6.4vw,5.6rem);font-weight:600;letter-spacing:-.02em;line-height:.95}
+.deck h1 span{display:block;color:var(--led)}
+.lead{margin-top:26px;max-width:34em;font-size:clamp(1.05rem,1.4vw,1.2rem);color:var(--ink-2)}
+.lead b{color:var(--ink);font-weight:500}
+.actions{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:12px;text-decoration:none;padding:17px 24px 16px;font-size:1.1rem}
+.btn.primary{background:linear-gradient(180deg,#ffc061,var(--led) 70%);color:var(--led-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -2px 0 rgba(0,0,0,.18),0 3px 1px #6e470f,0 10px 22px -6px rgba(0,0,0,.55)}
+.btn.primary:hover{color:var(--led-ink);background:linear-gradient(180deg,#ffcb7a,#ffb648 70%)}
+.btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.quiet{font:600 1rem/1 var(--display);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.quiet svg{width:17px;height:17px;fill:currentColor}
+.meta{margin-top:22px;font-size:.92rem;color:var(--ink-3)}
+
+/* control cluster */
+.cluster{display:grid;justify-items:center;gap:26px}
+.modes{display:flex;gap:12px;width:min(100%,380px)}
+.mode{flex:1;display:grid;gap:9px;justify-items:center;padding:12px 0 15px}
+.mode i{width:22px;height:5px;border-radius:3px;background:var(--led-dim);box-shadow:inset 0 1px 1px rgba(0,0,0,.5);transition:background .18s,box-shadow .18s}
+.mode[aria-pressed="true"] i{background:linear-gradient(180deg,#ffd38a,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
+.mode small{font:500 .78rem/1 var(--text);letter-spacing:.02em;text-transform:none;color:var(--ink-2)}
+.mode[aria-pressed="true"] small{color:var(--ink)}
+
+.readout{width:min(100%,380px);height:96px;border-radius:12px;background:var(--inset);
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.7),inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.05);
+  padding:14px 18px;display:grid;grid-template-rows:auto 1fr;gap:10px;overflow:hidden;position:relative}
+.ro-top{display:flex;justify-content:space-between;align-items:baseline;font:600 .9rem/1 var(--display);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.ro-top output{font:400 .95rem/1 var(--mono);letter-spacing:0;color:var(--led)}
+.ro-view{position:relative;overflow:hidden}
+.ro-pane{position:absolute;inset:0;opacity:0;transition:opacity .2s}
+.readout[data-mode="JOG"] .p-jog,.readout[data-mode="SCRL"] .p-scrl,.readout[data-mode="SHTL"] .p-shtl{opacity:1}
+.segs{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;height:100%;align-items:end}
+.segs span{height:60%;border-radius:2px;background:#2a241b}
+.segs span:nth-child(n+1){height:calc(30% + var(--i) * 2.8%)}
+.segs span.on{background:var(--led)}
+.readout.muted .segs span.on{background:#5a4a33}
+.lines{font:400 .8rem/1.55 var(--mono);color:var(--ink-2);will-change:transform}
+.lines div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lines div span{color:var(--ink-3);margin-right:12px}
+.ruler{position:absolute;inset:0;background:
+  repeating-linear-gradient(90deg,rgba(255,174,56,.85) 0 1px,transparent 1px calc(var(--z)*60px)) 0 0/100% 70% no-repeat,
+  repeating-linear-gradient(90deg,rgba(236,233,227,.28) 0 1px,transparent 1px calc(var(--z)*12px)) 0 100%/100% 40% no-repeat;
+  --z:1}
+.ruler::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;border-radius:3px;background:
+  linear-gradient(90deg,transparent 0 calc(10% * var(--z)),rgba(255,174,56,.2) calc(10% * var(--z)) calc(46% * var(--z)),transparent 0)}
+
+.dial-well{width:min(78vw,340px);aspect-ratio:1;border-radius:50%;padding:7%;
+  background:radial-gradient(circle,#0d0c0b 58%,#1b1a18 70%,#2a2824 71%,#1e1c1a 100%);
+  box-shadow:inset 0 3px 10px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06)}
+.dial{width:100%;height:100%;border-radius:50%;cursor:grab;touch-action:none;position:relative;outline-offset:8px;
+  background:repeating-conic-gradient(from 0deg,#34322e 0 1.6deg,#1c1b19 1.6deg 3.2deg);
+  box-shadow:0 14px 26px rgba(0,0,0,.6),0 2px 0 rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.08)}
+.dial:active{cursor:grabbing}
+.dial:focus-visible{border-radius:50%}
+.dial-face{position:absolute;inset:7%;border-radius:50%;
+  background:radial-gradient(circle at 45% 30%,#3e3b36,#2a2824 45%,#1f1d1b 75%,#2d2b27 100%);
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.08),inset 0 -6px 14px rgba(0,0,0,.45),0 0 0 1px #111}
+.dial-dimple{position:absolute;left:50%;top:17%;width:19%;aspect-ratio:1;translate:-50% 0;border-radius:50%;
+  background:radial-gradient(circle at 50% 70%,#36332f,#191816 75%);box-shadow:inset 0 3px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.07)}
+.dial-tick{position:absolute;left:50%;top:5%;width:3px;height:7%;translate:-50% 0;border-radius:2px;background:var(--led);box-shadow:0 1px 1px rgba(0,0,0,.6)}
+.hint{font-size:.9rem;color:var(--ink-3);text-align:center;max-width:30em}
+.hint b{font-weight:500;color:var(--ink-2)}
+
+/* sections */
+section{padding:clamp(80px,11vw,150px) 0 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end}
+h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
+.sec-head p,.body p{color:var(--ink-2);max-width:36em}
+.body p+p{margin-top:1em}
+
+/* F-row */
+.frow{margin-top:52px;display:grid;grid-template-columns:minmax(0,1.25fr) repeat(12,minmax(0,1fr));gap:clamp(6px,.8vw,10px)}
+.frow .cap{aspect-ratio:1/.92;display:grid;place-items:center;font-size:clamp(.72rem,1.2vw,1rem);padding:0}
+.frow .fn{position:relative;color:var(--ink-3);background:linear-gradient(180deg,#2a2824,#24221f);cursor:default;aspect-ratio:auto;align-self:stretch}
+.frow .fn::after{content:"";position:absolute;left:50%;top:50%;width:min(70%,40px);height:2px;translate:-50% -50%;background:var(--led);rotate:-28deg;border-radius:2px}
+.frow .cap.down{background:linear-gradient(180deg,#4a4741,#383530 70%)}
+.frow-note{margin-top:20px;font-size:.95rem;color:var(--ink-3)}
+.frow-note output{font-family:var(--mono);color:var(--led)}
+
+/* macros */
+.macros{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,6vw,90px);align-items:start;margin-top:56px}
+.legend{border-top:1px solid var(--line)}
+.legend li{display:grid;grid-template-columns:132px minmax(0,1fr);gap:20px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.legend .cap{padding:12px 8px 11px;font-size:.82rem;text-align:center;cursor:default;width:100%}
+.legend .act{display:grid;gap:3px}
+.legend .act b{font-weight:500;color:var(--ink)}
+.legend .act span{font:400 .86rem/1.4 var(--mono);color:var(--ink-3);overflow-wrap:anywhere}
+.legend ul{list-style:none;margin:0;padding:0}
+.types{margin-top:26px;color:var(--ink-2);font-size:.98rem}
+.window{border-radius:12px;overflow:hidden;background:#202020;box-shadow:0 0 0 1px #000,0 1px 0 1px rgba(255,255,255,.06),0 40px 70px -24px rgba(0,0,0,.8)}
+.window-bar{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 0 0 14px;font:400 .8rem/1 "Segoe UI",var(--text);color:#cfcfcf;background:#202020;border-bottom:1px solid #2b2b2b}
+.window-bar .t{display:flex;align-items:center;gap:9px}
+.window-bar svg.app{width:15px;height:15px}
+.window-bar .ctl{display:flex;height:100%}
+.window-bar .ctl i{width:44px;display:grid;place-items:center}
+.window-bar .ctl svg{width:10px;height:10px;stroke:#cfcfcf;stroke-width:1;fill:none}
+.window img{width:100%;height:auto}
+.caption{margin-top:16px;font-size:.88rem;color:var(--ink-3)}
+
+/* resolve */
+.handoff{margin-top:56px;position:relative;padding:34px 0 0}
+.track{position:relative;height:56px;border-radius:10px;background:var(--inset);box-shadow:inset 0 2px 6px rgba(0,0,0,.6);overflow:hidden}
+.track .seg{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 16px;font:600 .9rem/1 var(--display);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.track .us{background:linear-gradient(180deg,rgba(255,174,56,.22),rgba(255,174,56,.12));color:var(--led)}
+.track .them{background:linear-gradient(180deg,#34322d,#2b2925);color:var(--ink-2)}
+.track .s1{left:0;width:32%}
+.track .s2{left:32%;width:41%}
+.track .s3{left:73%;right:0}
+.marks{position:relative;height:64px;margin-top:10px}
+.marks div{position:absolute;top:0;translate:-50% 0;text-align:center;font-size:.86rem;color:var(--ink-3);width:13em}
+.marks div::before{content:"";display:block;width:1px;height:14px;margin:0 auto 8px;background:var(--ink-3)}
+.marks b{display:block;font-weight:500;color:var(--ink-2)}
+.marks .m1{left:32%}
+.marks .m2{left:73%}
+
+/* install */
+.steps{margin:52px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,4vw,56px)}
+.steps li{border-top:2px solid var(--line);padding-top:22px}
+.steps .n{display:inline-grid;place-items:center;width:42px;height:42px;margin-bottom:18px;font-size:1.05rem;cursor:default}
+.steps h3{font-size:1.65rem;margin-bottom:10px}
+.steps p{color:var(--ink-2)}
+.src{margin-top:56px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,5vw,64px);align-items:start}
+.src h3{font-size:1.65rem;margin-bottom:10px}
+.src p{color:var(--ink-2)}
+.src>*{min-width:0}
+pre{margin:0;background:var(--inset);border:1px solid var(--line);border-radius:12px;padding:20px 22px;overflow:auto;line-height:1.75;color:var(--ink-2)}
+pre .c{color:var(--ink-3)}
+pre .p{color:var(--led);user-select:none}
+
+/* how */
+.exchange{margin-top:52px;background:var(--inset);border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,30px);overflow-x:auto}
+.exchange table{border-collapse:collapse;width:100%;min-width:640px;font-family:var(--mono);font-size:.86rem}
+.exchange td{padding:9px 14px 9px 0;vertical-align:baseline;white-space:nowrap}
+.exchange td.dir{width:3.6em;font:600 .82rem/1 var(--display);letter-spacing:.08em;color:var(--led)}
+.exchange td.dir.in{color:var(--ink-2)}
+.exchange td.bytes{color:var(--ink)}
+.exchange td.bytes em{font-style:normal;color:var(--ink-3)}
+.exchange td.what{font-family:var(--text);font-size:.95rem;color:var(--ink-2);white-space:normal}
+.notes{margin-top:56px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,5vw,72px)}
+.notes h3{font-size:1.65rem;margin-bottom:12px}
+.notes p{color:var(--ink-2)}
+.notes p+p{margin-top:.9em}
+.num{font-family:var(--mono);font-size:.92em;color:var(--ink)}
+
+/* close */
+.close{margin-top:clamp(90px,12vw,160px);border-radius:22px;background:radial-gradient(120% 120% at 80% 0%,var(--deck-hi),var(--deck) 60%);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 #0b0b0c;padding:clamp(32px,5vw,60px);display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
+.close h2{font-size:clamp(2rem,4vw,3.2rem)}
+.close-leds{display:flex;gap:10px;margin-bottom:18px}
+.close-leds i{width:22px;height:5px;border-radius:3px;background:var(--led-dim);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
+.close-leds i.on{background:linear-gradient(180deg,#ffd38a,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
+footer.wrap{padding-top:56px;padding-bottom:64px;color:var(--ink-3);font-size:.92rem;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px}
+footer p+p{margin-top:.6em}
+footer a{color:var(--ink-2)}
+.foot-links{display:flex;gap:22px;justify-content:flex-end;align-items:start;flex-wrap:wrap}
+
+@media (max-width:960px){
+  .deck{grid-template-columns:minmax(0,1fr)}
+  .cluster{order:2}
+  .sec-head,.macros,.src,.notes{grid-template-columns:minmax(0,1fr)}
+  .sec-head{align-items:start}
+  footer.wrap{grid-template-columns:minmax(0,1fr)}
+  .foot-links{justify-content:flex-start}
+}
+@media (max-width:720px){
+  .rail nav a:not(.gh){display:none}
+  .frow{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .frow .fn{grid-column:1 / -1;aspect-ratio:auto;height:44px}
+  .steps{grid-template-columns:1fr}
+  .legend li{grid-template-columns:104px minmax(0,1fr);gap:14px}
+  .track .seg{font-size:.72rem;padding:0 8px;letter-spacing:.04em}
+  .marks{height:84px}
+  .marks div{width:9em;font-size:.8rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="wrap rail">
+  <a class="mark" href="./" aria-label="Outside Resolve home">
+    <svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13.5" fill="#2e2f34" stroke="#141416"/><circle cx="15" cy="15" r="9" fill="#3b3c42"/><circle cx="15" cy="8.6" r="2.2" fill="#ffae38"/></svg>
+    Outside Resolve
+  </a>
+  <nav aria-label="Sections">
+    <a href="#features">Features</a>
+    <a href="#install">Install</a>
+    <a href="#how">How it works</a>
+    <a class="gh" href="https://github.com/dismxo/outside-resolve"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+  </nav>
+</header>
+
+<main>
+<div class="wrap">
+  <div class="deck">
+    <div class="copy">
+      <h1>Your Editor Keyboard, <span>outside Resolve.</span></h1>
+      <p class="lead">Outside DaVinci Resolve, the Blackmagic Editor Keyboard is just a keyboard: the search dial and the editing keys stay dead. This small Windows app wakes them up. <b>The dial runs volume, scroll and zoom, every editing key becomes a macro, and the F-row works without Fn.</b></p>
+      <div class="actions">
+        <a class="cap btn primary" href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-win64.zip">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
+          Download for Windows
+        </a>
+        <a class="quiet" href="https://github.com/dismxo/outside-resolve"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Source on GitHub</a>
+      </div>
+      <p class="meta">Free and open source · Windows 10 and 11 · lives in the tray</p>
+    </div>
+
+    <div class="cluster" aria-label="Try it: the dial and its mode keys">
+      <div class="modes" role="group" aria-label="Dial mode">
+        <button class="cap mode" type="button" data-mode="SHTL" aria-pressed="false"><i></i>Shtl<small>zoom</small></button>
+        <button class="cap mode" type="button" data-mode="JOG" aria-pressed="true"><i></i>Jog<small>volume</small></button>
+        <button class="cap mode" type="button" data-mode="SCRL" aria-pressed="false"><i></i>Scrl<small>scroll</small></button>
+      </div>
+      <div class="readout" data-mode="JOG" aria-hidden="true">
+        <div class="ro-top"><span class="ro-label">Volume</span><output class="ro-val">42</output></div>
+        <div class="ro-view">
+          <div class="ro-pane p-jog"><div class="segs"></div></div>
+          <div class="ro-pane p-scrl"><div class="lines"></div></div>
+          <div class="ro-pane p-shtl"><div class="ruler"></div></div>
+        </div>
+      </div>
+      <div class="dial-well">
+        <div class="dial" tabindex="0" role="slider" aria-label="Search dial" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42" aria-valuetext="Volume 42%">
+          <div class="dial-spin" style="position:absolute;inset:0;border-radius:50%">
+            <div class="dial-face"></div>
+            <div class="dial-dimple"></div>
+            <div class="dial-tick"></div>
+          </div>
+        </div>
+      </div>
+      <p class="hint"><b>Try it:</b> drag or scroll the dial, switch modes, click the dial to press it. A simulation of what the real one does.</p>
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>F1 to F12.<br>No Fn.</h2>
+      <p>Away from Resolve, the keyboard's F-row sends its own vendor codes, so normally you need to hold Fn for every F-key. The app turns them back into real F-keys: they hold, repeat at your Windows repeat rate, and combine with Ctrl, Alt and Shift.</p>
+    </div>
+    <div class="frow" role="group" aria-label="F-row demo">
+      <span class="cap fn" aria-hidden="true">Fn</span>
+    </div>
+    <p class="frow-note" aria-live="polite">Press one: <output class="frow-out">nothing yet</output></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Every editing key,<br>a macro.</h2>
+      <p>Click <b>Capture a key</b> in the app, press any key on the keyboard, and decide what it does. Keep separate sets for editing, office work or games, and switch profiles with one click.</p>
+    </div>
+    <div class="macros">
+      <div>
+        <div class="legend">
+          <ul>
+            <li><span class="cap">Smart insrt</span><span class="act"><b>Reopen the last closed tab</b><span>hotkey · ctrl+shift+t</span></span></li>
+            <li><span class="cap">Cut</span><span class="act"><b>Screenshot a region</b><span>hotkey · win+shift+s</span></span></li>
+            <li><span class="cap">In</span><span class="act"><b>Open a website or an app</b><span>launch · https://github.com</span></span></li>
+            <li><span class="cap">Snap</span><span class="act"><b>Type a sign-off</b><span>text · Thanks, talk soon!</span></span></li>
+            <li><span class="cap">Stop/Play</span><span class="act"><b>Play or pause any player</b><span>media · play / pause</span></span></li>
+            <li><span class="cap">Live O/Wr</span><span class="act"><b>New terminal tab</b><span>shell · wt -w 0 nt</span></span></li>
+          </ul>
+        </div>
+        <p class="types">Five kinds of action: a key combination, typed text, launching an app, file or URL, a shell command, or a media key.</p>
+      </div>
+      <figure style="margin:0">
+        <div class="window">
+          <div class="window-bar">
+            <span class="t"><svg class="app" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#1f2430"/><circle cx="32" cy="32" r="16" fill="#3d8bfd"/><circle cx="32" cy="12" r="3" fill="#eaf2ff"/></svg>Outside Resolve</span>
+            <span class="ctl" aria-hidden="true"><i><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></i><i><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9"/></svg></i><i><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0 0 10"/></svg></i></span>
+          </div>
+          <img src="screenshot.png" width="660" height="900" loading="lazy" alt="The Outside Resolve window: connection status, the three dial modes with JOG active, a profile picker, a table of five key mappings, and dial tuning options">
+        </div>
+        <figcaption class="caption">The app itself. Closing the window keeps it running in the tray.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Resolve always<br>comes first.</h2>
+      <p>Resolve needs the keyboard to itself, so the app steps aside the moment Resolve starts and picks the keyboard back up when Resolve closes. Nothing to switch, and Resolve works exactly as it always did. While Resolve is open, the F-row is Resolve's too.</p>
+    </div>
+    <div class="handoff" aria-label="Who owns the keyboard over time">
+      <div class="track">
+        <div class="seg us s1">Outside Resolve</div>
+        <div class="seg them s2">DaVinci Resolve</div>
+        <div class="seg us s3">Outside Resolve</div>
+      </div>
+      <div class="marks">
+        <div class="m1"><b>Resolve starts</b>app steps aside in ~0.4 s</div>
+        <div class="m2"><b>Resolve closes</b>dial and keys come back</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Install in a minute.</h2>
+      <p>No drivers, no Zadig, no admin rights. Plug the keyboard in over USB and run the app.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="cap n" aria-hidden="true">1</span><h3>Download</h3><p>Get <a href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-win64.zip">OutsideResolve-win64.zip</a> and unzip it anywhere. Prefer one file? Take the <a href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-portable.exe">portable .exe</a>.</p></li>
+      <li><span class="cap n" aria-hidden="true">2</span><h3>Run</h3><p>Start <code>OutsideResolve.exe</code>. It is not code-signed, so SmartScreen may ask once: choose <i>More info</i>, then <i>Run anyway</i>.</p></li>
+      <li><span class="cap n" aria-hidden="true">3</span><h3>Turn the dial</h3><p>The status turns green and the dial is live. Tick <i>Start automatically when Windows starts</i> to keep it in the tray every day.</p></li>
+    </ol>
+    <div class="src">
+      <div>
+        <h3>Or run it from source</h3>
+        <p>Python 3.11 or newer. <code>build.bat</code> makes the executable, <code>install.bat</code> installs it with shortcuts.</p>
+      </div>
+<pre><code><span class="p">&gt; </span>git clone https://github.com/dismxo/outside-resolve.git
+<span class="p">&gt; </span>cd outside-resolve
+<span class="p">&gt; </span>py -m pip install -r requirements.txt
+<span class="p">&gt; </span>py main.py</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How it works.</h2>
+      <p>The dial and the editing keys live on a vendor HID interface that stays silent until the computer answers a challenge. The keyboard asks again every ten minutes. Here is the handshake, byte for byte.</p>
+    </div>
+    <div class="exchange">
+      <table>
+        <caption class="sr">Authentication handshake over feature report 6</caption>
+        <tbody>
+          <tr><td class="dir">OUT<span class="sr"> to the keyboard</span></td><td class="bytes">06 00 <em>00 00 00 00 00 00 00 00</em></td><td class="what">Reset the authentication state.</td></tr>
+          <tr><td class="dir in">IN<span class="sr"> from the keyboard</span></td><td class="bytes">06 00 <em>c1 c2 c3 c4 c5 c6 c7 c8</em></td><td class="what">The keyboard's 64-bit challenge.</td></tr>
+          <tr><td class="dir">OUT<span class="sr"> to the keyboard</span></td><td class="bytes">06 01 <em>00 00 00 00 00 00 00 00</em></td><td class="what">Our own challenge. Its answer is never checked.</td></tr>
+          <tr><td class="dir in">IN<span class="sr"> from the keyboard</span></td><td class="bytes">06 02 <em>·· ·· ·· ·· ·· ·· ·· ··</em></td><td class="what">The keyboard's answer.</td></tr>
+          <tr><td class="dir">OUT<span class="sr"> to the keyboard</span></td><td class="bytes">06 03 <em>r1 r2 r3 r4 r5 r6 r7 r8</em></td><td class="what">The response, computed from the challenge.</td></tr>
+          <tr><td class="dir in">IN<span class="sr"> from the keyboard</span></td><td class="bytes">06 04 58 02 <em>·· ·· ·· ·· ·· ··</em></td><td class="what">Accepted. <span class="num">0x0258</span> = 600 seconds until it asks again; the app renews at half that.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notes">
+      <div>
+        <h3>What the keyboard sends</h3>
+        <p>Report <span class="num">0x03</span> is the dial: a mode byte, then a signed 32-bit delta that grows with how fast you spin. Report <span class="num">0x04</span> lists up to six keys held at once as 16-bit codes. The F-row reports codes <span class="num">0x1F</span>–<span class="num">0x2A</span> instead of real F-keys, which is the whole reason it needs Fn.</p>
+        <p>The response function was reverse engineered by Sylvain Munaut for the smaller Speed Editor. The full-size keyboard accepts the same one; its report layout was decoded from live captures with the <code>discovery.py</code> tool in the repository.</p>
+      </div>
+      <div>
+        <h3>Why it talks to Windows directly</h3>
+        <p>The keyboard never answers a request for its product name. Each request hangs for five seconds and blocks everything else on the line, and the usual HID library asks for it on every interface. Finding the keyboard took <span class="num">15.07 s</span>.</p>
+        <p>The app skips that request and reads only what Windows already knows: finding the keyboard takes under <span class="num">1 ms</span>, the handshake about <span class="num">40 ms</span>, and the idle app sits on a blocking read at next to no CPU.</p>
+      </div>
+    </div>
+
+    <div class="close">
+      <div><div class="close-leds" aria-hidden="true"><i></i><i class="on"></i><i></i></div><h2>Give the dial something to do.</h2></div>
+      <a class="cap btn primary" href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-win64.zip">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
+        Download for Windows
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <div>
+    <p>Authentication from <a href="https://github.com/smunaut/blackmagic-misc">smunaut/blackmagic-misc</a> by Sylvain Munaut. Built with PySide6 and pynput. Released under the <a href="https://github.com/dismxo/outside-resolve/blob/main/LICENSE">Apache-2.0 license</a>.</p>
+    <p>Blackmagic Design, DaVinci and DaVinci Resolve are trademarks of Blackmagic Design Pty. Ltd. This project is not affiliated with or endorsed by Blackmagic Design.</p>
+  </div>
+  <div class="foot-links">
+    <a href="https://github.com/dismxo/outside-resolve">Source</a>
+    <a href="https://github.com/dismxo/outside-resolve/releases">Releases</a>
+    <a href="https://github.com/dismxo/outside-resolve/issues">Report a problem</a>
+    <a href="https://github.com/dismxo">dismxo</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+  // ---- dial demo ----
+  const dial = document.querySelector('.dial');
+  const spin = dial.querySelector('.dial-spin');
+  const readout = document.querySelector('.readout');
+  const label = readout.querySelector('.ro-label');
+  const val = readout.querySelector('.ro-val');
+  const segsEl = readout.querySelector('.segs');
+  const lines = readout.querySelector('.lines');
+  const ruler = readout.querySelector('.ruler');
+  const modeBtns = [...document.querySelectorAll('.mode')];
+
+  const segs = Array.from({length: 25}, (_, i) => {
+    const s = document.createElement('span');
+    s.style.setProperty('--i', i);
+    segsEl.appendChild(s);
+    return s;
+  });
+  const clips = [
+    ['01', 'A001_C004  interview wide'], ['02', 'A001_C007  interview close'],
+    ['03', 'B002_C012  hands on dial'], ['04', 'B002_C015  street, night'],
+    ['05', 'A003_C001  title card'], ['06', 'C001_C003  drone pass'],
+    ['07', 'A004_C009  reaction'], ['08', 'B003_C002  product detail'],
+    ['09', 'A005_C011  outro'], ['10', 'SFX_whoosh_04'],
+  ];
+  const lineH = 19.84; // .8rem * 1.55 at 16px
+  for (let k = 0; k < 3; k++) for (const [n, t] of clips) {
+    const d = document.createElement('div');
+    d.innerHTML = '<span>' + n + '</span>' + t;
+    lines.appendChild(d);
+  }
+
+  let mode = 'JOG', vol = 0.42, muted = false, playing = false, scroll = 0, zoom = 1, angle = 0;
+  const loop = clips.length * lineH;
+
+  function render() {
+    readout.dataset.mode = mode;
+    readout.classList.toggle('muted', muted);
+    let text;
+    if (mode === 'JOG') {
+      const pct = Math.round(vol * 100);
+      label.textContent = 'Volume';
+      val.textContent = muted ? 'muted' : pct;
+      const lit = Math.round(vol * segs.length);
+      segs.forEach((s, i) => s.classList.toggle('on', i < lit));
+      text = muted ? 'Volume muted' : 'Volume ' + pct + '%';
+      dial.setAttribute('aria-valuenow', pct);
+    } else if (mode === 'SCRL') {
+      const off = ((scroll % loop) + loop) % loop;
+      lines.style.transform = 'translateY(' + (-off) + 'px)';
+      const row = Math.floor(off / lineH) % clips.length;
+      label.textContent = playing ? 'Scroll · playing' : 'Scroll';
+      val.textContent = 'line ' + clips[row][0];
+      text = 'Scrolled to line ' + clips[row][0];
+      dial.setAttribute('aria-valuenow', Math.round(off / loop * 100));
+    } else {
+      label.textContent = playing ? 'Zoom · playing' : 'Zoom';
+      val.textContent = Math.round(zoom * 100) + '%';
+      ruler.style.setProperty('--z', zoom.toFixed(3));
+      text = 'Zoom ' + Math.round(zoom * 100) + '%';
+      dial.setAttribute('aria-valuenow', Math.round(clamp((zoom - .25) / 5.75, 0, 1) * 100));
+    }
+    dial.setAttribute('aria-valuetext', text);
+  }
+
+  function turn(deg) {
+    angle += deg;
+    spin.style.transform = 'rotate(' + angle + 'deg)';
+    if (mode === 'JOG') { vol = clamp(vol + deg / 540, 0, 1); if (muted && deg) muted = false; }
+    else if (mode === 'SCRL') scroll += deg * 0.9;
+    else zoom = clamp(zoom * Math.exp(deg / 360), .25, 6);
+    render();
+  }
+
+  function press() {
+    dial.animate([{transform: 'scale(1)'}, {transform: 'scale(.975)'}, {transform: 'scale(1)'}], {duration: reduce ? 1 : 180});
+    if (mode === 'JOG') muted = !muted; else playing = !playing;
+    render();
+  }
+
+  function setMode(m) {
+    mode = m;
+    modeBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+    render();
+  }
+  modeBtns.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  let last = null, travel = 0;
+  const angleAt = e => {
+    const r = dial.getBoundingClientRect();
+    return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+  };
+  dial.addEventListener('pointerdown', e => {
+    dial.setPointerCapture(e.pointerId);
+    last = angleAt(e); travel = 0;
+  });
+  dial.addEventListener('pointermove', e => {
+    if (last === null) return;
+    const a = angleAt(e);
+    let d = a - last;
+    if (d > 180) d -= 360; else if (d < -180) d += 360;
+    last = a; travel += Math.abs(d);
+    turn(d);
+  });
+  const end = () => { if (last !== null && travel < 4) press(); last = null; };
+  dial.addEventListener('pointerup', end);
+  dial.addEventListener('pointercancel', () => { last = null; });
+  dial.addEventListener('wheel', e => { e.preventDefault(); turn(e.deltaY > 0 ? 10 : -10); }, {passive: false});
+  dial.addEventListener('keydown', e => {
+    const step = {ArrowRight: 9, ArrowUp: 9, ArrowLeft: -9, ArrowDown: -9, PageUp: 45, PageDown: -45}[e.key];
+    if (step) { e.preventDefault(); turn(step); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); press(); }
+  });
+
+  render();
+
+  // One short spin on load, so the dial reads as something to turn.
+  if (!reduce) {
+    let t0 = null;
+    const total = 70;
+    let done = 0;
+    const step = ts => {
+      if (last !== null) return;
+      if (t0 === null) t0 = ts;
+      const p = clamp((ts - t0) / 1100, 0, 1);
+      const e = 1 - Math.pow(1 - p, 4);
+      const target = total * e;
+      turn(target - done); done = target;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    setTimeout(() => requestAnimationFrame(step), 500);
+  }
+
+  // ---- F-row demo ----
+  const frow = document.querySelector('.frow');
+  const out = document.querySelector('.frow-out');
+  for (let i = 1; i <= 12; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cap';
+    b.textContent = 'F' + i;
+    b.addEventListener('pointerdown', () => b.classList.add('down'));
+    ['pointerup', 'pointerleave', 'blur'].forEach(ev => b.addEventListener(ev, () => b.classList.remove('down')));
+    b.addEventListener('click', () => { out.textContent = 'F' + i + ', as a real F' + i + ' key'; });
+    frow.appendChild(b);
+  }
+})();
+</script>
+</body>
+</html>
