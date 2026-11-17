@@ -81,9 +81,14 @@ p{margin:0}
   radial-gradient(120% 90% at 30% 0%,var(--deck-hi),var(--deck) 60%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 #0b0b0c,0 40px 80px -30px rgba(0,0,0,.7);
   padding:clamp(28px,5vw,64px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,72px);align-items:center;overflow:hidden}
-.deck::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:overlay;
+.deck::before,.panel::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.deck>*{position:relative}
+.deck>*,.panel>*{position:relative}
+.panel{position:relative;overflow:hidden;border-radius:22px;padding:clamp(28px,5vw,60px);
+  background:radial-gradient(120% 100% at 75% 0%,var(--deck-hi),var(--deck) 62%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 #0b0b0c,0 40px 80px -30px rgba(0,0,0,.7)}
+.led{display:inline-block;flex:none;width:22px;height:5px;border-radius:3px;background:var(--led-dim);box-shadow:inset 0 1px 1px rgba(0,0,0,.5);transition:background .18s}
+.led.on{background:linear-gradient(180deg,#ffd38a,var(--led));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 1px rgba(0,0,0,.5)}
 .deck h1{font-size:clamp(2.9rem,6.4vw,5.6rem);font-weight:600;letter-spacing:-.02em;line-height:.95}
 .deck h1 span{display:block;color:var(--led)}
 .lead{margin-top:26px;max-width:34em;font-size:clamp(1.05rem,1.4vw,1.2rem);color:var(--ink-2)}
@@ -96,6 +101,7 @@ p{margin:0}
 .quiet{font:600 1rem/1 var(--display);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .quiet svg{width:17px;height:17px;fill:currentColor}
 .meta{margin-top:22px;font-size:.92rem;color:var(--ink-3)}
+.meta.unofficial{margin-top:6px}
 
 /* control cluster */
 .cluster{display:grid;justify-items:center;gap:26px}
@@ -159,8 +165,8 @@ h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
 .frow .fn{position:relative;color:var(--ink-3);background:linear-gradient(180deg,#2a2824,#24221f);cursor:default;aspect-ratio:auto;align-self:stretch}
 .frow .fn::after{content:"";position:absolute;left:50%;top:50%;width:min(70%,40px);height:2px;translate:-50% -50%;background:var(--led);rotate:-28deg;border-radius:2px}
 .frow .cap.down{background:linear-gradient(180deg,#4a4741,#383530 70%)}
-.frow-note{margin-top:20px;font-size:.95rem;color:var(--ink-3)}
-.frow-note output{font-family:var(--mono);color:var(--led)}
+.frow-note{margin-top:22px;display:inline-flex;align-items:center;gap:14px;padding:12px 18px;border-radius:10px;background:var(--inset);box-shadow:inset 0 2px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.05);font:600 .85rem/1 var(--display);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.frow-note output{font:400 .9rem/1 var(--mono);letter-spacing:0;text-transform:none;color:var(--led)}
 
 /* macros */
 .macros{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,6vw,90px);align-items:start;margin-top:56px}
@@ -183,7 +189,14 @@ h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
 .caption{margin-top:16px;font-size:.88rem;color:var(--ink-3)}
 
 /* resolve */
-.handoff{margin-top:56px;position:relative;padding:34px 0 0}
+.resolve{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,72px);align-items:center}
+.resolve-copy p{margin-top:22px;color:var(--ink-2);max-width:34em}
+.resolve-sim{display:grid;gap:14px;padding:22px;border-radius:14px;background:var(--inset);box-shadow:inset 0 2px 8px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.05)}
+.proc{display:flex;align-items:center;gap:16px}
+.proc b{display:block;font:600 1.05rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.proc span{font-size:.92rem;color:var(--ink-2)}
+.sim-btn{margin-top:6px;padding:15px 18px 14px;font-size:1rem;width:100%}
+.handoff{grid-column:1/-1;position:relative;padding:18px 0 0}
 .track{position:relative;height:56px;border-radius:10px;background:var(--inset);box-shadow:inset 0 2px 6px rgba(0,0,0,.6);overflow:hidden}
 .track .seg{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 16px;font:600 .9rem/1 var(--display);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
 .track .us{background:linear-gradient(180deg,rgba(255,174,56,.22),rgba(255,174,56,.12));color:var(--led)}
@@ -201,7 +214,8 @@ h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
 /* install */
 .steps{margin:52px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,4vw,56px)}
 .steps li{border-top:2px solid var(--line);padding-top:22px}
-.steps .n{display:inline-grid;place-items:center;width:42px;height:42px;margin-bottom:18px;font-size:1.05rem;cursor:default}
+.steps .n{display:inline-grid;justify-items:center;align-content:center;gap:7px;width:56px;height:56px;margin-bottom:20px;font-size:1.1rem;cursor:default}
+.steps .n .led{width:16px;height:4px}
 .steps h3{font-size:1.65rem;margin-bottom:10px}
 .steps p{color:var(--ink-2)}
 .src{margin-top:56px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,5vw,64px);align-items:start}
@@ -209,11 +223,15 @@ h2{font-size:clamp(2.3rem,4.6vw,3.9rem);letter-spacing:-.015em}
 .src p{color:var(--ink-2)}
 .src>*{min-width:0}
 pre{margin:0;background:var(--inset);border:1px solid var(--line);border-radius:12px;padding:20px 22px;overflow:auto;line-height:1.75;color:var(--ink-2)}
+pre code{background:none;border:0;padding:0;font-size:1em}
 pre .c{color:var(--ink-3)}
 pre .p{color:var(--led);user-select:none}
 
 /* how */
-.exchange{margin-top:52px;background:var(--inset);border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,30px);overflow-x:auto}
+.how .sec-head{align-items:start}
+.exchange.armed tbody tr{opacity:.18;transition:opacity .35s var(--ease)}
+.exchange.armed tbody tr.lit{opacity:1}
+.exchange{margin-top:44px;background:var(--inset);border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,30px);overflow-x:auto}
 .exchange table{border-collapse:collapse;width:100%;min-width:640px;font-family:var(--mono);font-size:.86rem}
 .exchange td{padding:9px 14px 9px 0;vertical-align:baseline;white-space:nowrap}
 .exchange td.dir{width:3.6em;font:600 .82rem/1 var(--display);letter-spacing:.08em;color:var(--led)}
@@ -241,7 +259,7 @@ footer a{color:var(--ink-2)}
 @media (max-width:960px){
   .deck{grid-template-columns:minmax(0,1fr)}
   .cluster{order:2}
-  .sec-head,.macros,.src,.notes{grid-template-columns:minmax(0,1fr)}
+  .sec-head,.macros,.src,.notes,.resolve{grid-template-columns:minmax(0,1fr)}
   .sec-head{align-items:start}
   footer.wrap{grid-template-columns:minmax(0,1fr)}
   .foot-links{justify-content:flex-start}
@@ -290,6 +308,7 @@ footer a{color:var(--ink-2)}
         <a class="quiet" href="https://github.com/dismxo/outside-resolve"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Source on GitHub</a>
       </div>
       <p class="meta">Free and open source · Windows 10 and 11 · lives in the tray</p>
+      <p class="meta unofficial">An independent community project, not affiliated with or endorsed by Blackmagic Design.</p>
     </div>
 
     <div class="cluster" aria-label="Try it: the dial and its mode keys">
@@ -329,7 +348,7 @@ footer a{color:var(--ink-2)}
     <div class="frow" role="group" aria-label="F-row demo">
       <span class="cap fn" aria-hidden="true">Fn</span>
     </div>
-    <p class="frow-note" aria-live="polite">Press one: <output class="frow-out">nothing yet</output></p>
+    <p class="frow-note" aria-live="polite"><i class="led frow-led"></i><span>Last key</span><output class="frow-out">press one above</output></p>
   </div>
 </section>
 
@@ -369,19 +388,26 @@ footer a{color:var(--ink-2)}
 
 <section>
   <div class="wrap">
-    <div class="sec-head">
-      <h2>Resolve always<br>comes first.</h2>
-      <p>Resolve needs the keyboard to itself, so the app steps aside the moment Resolve starts and picks the keyboard back up when Resolve closes. Nothing to switch, and Resolve works exactly as it always did. While Resolve is open, the F-row is Resolve's too.</p>
-    </div>
-    <div class="handoff" aria-label="Who owns the keyboard over time">
-      <div class="track">
-        <div class="seg us s1">Outside Resolve</div>
-        <div class="seg them s2">DaVinci Resolve</div>
-        <div class="seg us s3">Outside Resolve</div>
+    <div class="panel resolve">
+      <div class="resolve-copy">
+        <h2>Resolve always<br>comes first.</h2>
+        <p>Resolve needs the keyboard to itself, so the app steps aside the moment Resolve starts and picks the keyboard back up when Resolve closes. Nothing to switch, and Resolve works exactly as it always did. While Resolve is open, the F-row is Resolve's too.</p>
       </div>
-      <div class="marks">
-        <div class="m1"><b>Resolve starts</b>app steps aside in ~0.4 s</div>
-        <div class="m2"><b>Resolve closes</b>dial and keys come back</div>
+      <div class="resolve-sim" aria-live="polite">
+        <div class="proc"><i class="led on" id="led-app"></i><div><b>Outside Resolve</b><span id="st-app">Dial and keys live</span></div></div>
+        <div class="proc"><i class="led" id="led-res"></i><div><b>DaVinci Resolve</b><span id="st-res">Not running</span></div></div>
+        <button class="cap sim-btn" type="button" aria-pressed="false">Start Resolve</button>
+      </div>
+      <div class="handoff" aria-label="Who owns the keyboard over time">
+        <div class="track">
+          <div class="seg us s1">Outside Resolve</div>
+          <div class="seg them s2">DaVinci Resolve</div>
+          <div class="seg us s3">Outside Resolve</div>
+        </div>
+        <div class="marks">
+          <div class="m1"><b>Resolve starts</b>app steps aside in ~0.4 s</div>
+          <div class="m2"><b>Resolve closes</b>dial and keys come back</div>
+        </div>
       </div>
     </div>
   </div>
@@ -394,9 +420,9 @@ footer a{color:var(--ink-2)}
       <p>No drivers, no Zadig, no admin rights. Plug the keyboard in over USB and run the app.</p>
     </div>
     <ol class="steps">
-      <li><span class="cap n" aria-hidden="true">1</span><h3>Download</h3><p>Get <a href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-win64.zip">OutsideResolve-win64.zip</a> and unzip it anywhere. Prefer one file? Take the <a href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-portable.exe">portable .exe</a>.</p></li>
-      <li><span class="cap n" aria-hidden="true">2</span><h3>Run</h3><p>Start <code>OutsideResolve.exe</code>. It is not code-signed, so SmartScreen may ask once: choose <i>More info</i>, then <i>Run anyway</i>.</p></li>
-      <li><span class="cap n" aria-hidden="true">3</span><h3>Turn the dial</h3><p>The status turns green and the dial is live. Tick <i>Start automatically when Windows starts</i> to keep it in the tray every day.</p></li>
+      <li><span class="cap n" aria-hidden="true"><i class="led on"></i>1</span><h3>Download</h3><p>Get <a href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-win64.zip">OutsideResolve-win64.zip</a> and unzip it anywhere. Prefer one file? Take the <a href="https://github.com/dismxo/outside-resolve/releases/latest/download/OutsideResolve-portable.exe">portable .exe</a>.</p></li>
+      <li><span class="cap n" aria-hidden="true"><i class="led on"></i>2</span><h3>Run</h3><p>Start <code>OutsideResolve.exe</code>. It is not code-signed, so SmartScreen may ask once: choose <i>More info</i>, then <i>Run anyway</i>.</p></li>
+      <li><span class="cap n" aria-hidden="true"><i class="led on"></i>3</span><h3>Turn the dial</h3><p>The status turns green and the dial is live. Tick <i>Start automatically when Windows starts</i> to keep it in the tray every day.</p></li>
     </ol>
     <div class="src">
       <div>
@@ -413,6 +439,7 @@ footer a{color:var(--ink-2)}
 
 <section id="how">
   <div class="wrap">
+   <div class="panel how">
     <div class="sec-head">
       <h2>How it works.</h2>
       <p>The dial and the editing keys live on a vendor HID interface that stays silent until the computer answers a challenge. The keyboard asks again every ten minutes. Here is the handshake, byte for byte.</p>
@@ -430,6 +457,7 @@ footer a{color:var(--ink-2)}
         </tbody>
       </table>
     </div>
+   </div>
     <div class="notes">
       <div>
         <h3>What the keyboard sends</h3>
@@ -604,9 +632,45 @@ footer a{color:var(--ink-2)}
     setTimeout(() => requestAnimationFrame(step), 500);
   }
 
+  // ---- Resolve hand-off demo ----
+  const simBtn = document.querySelector('.sim-btn');
+  const ledApp = document.getElementById('led-app'), ledRes = document.getElementById('led-res');
+  const stApp = document.getElementById('st-app'), stRes = document.getElementById('st-res');
+  let resolveOn = false, simT;
+  simBtn.addEventListener('click', () => {
+    resolveOn = !resolveOn;
+    simBtn.setAttribute('aria-pressed', String(resolveOn));
+    simBtn.textContent = resolveOn ? 'Close Resolve' : 'Start Resolve';
+    clearTimeout(simT);
+    if (resolveOn) {
+      ledRes.classList.add('on'); stRes.textContent = 'Running, owns the keyboard';
+      stApp.textContent = 'Resolve detected, stepping aside';
+      simT = setTimeout(() => { ledApp.classList.remove('on'); stApp.textContent = 'Paused until Resolve closes'; }, 400);
+    } else {
+      ledRes.classList.remove('on'); stRes.textContent = 'Not running';
+      stApp.textContent = 'Reconnecting';
+      simT = setTimeout(() => { ledApp.classList.add('on'); stApp.textContent = 'Dial and keys live'; }, 400);
+    }
+  });
+
+  // ---- the handshake plays once when it scrolls into view ----
+  const ex = document.querySelector('.exchange');
+  if (!reduce && 'IntersectionObserver' in window) {
+    const rows = [...ex.querySelectorAll('tbody tr')];
+    ex.classList.add('armed');
+    const io = new IntersectionObserver(es => {
+      if (!es.some(e => e.isIntersecting)) return;
+      io.disconnect();
+      rows.forEach((r, k) => setTimeout(() => r.classList.add('lit'), 180 + k * 260));
+    }, {threshold: .45});
+    io.observe(ex);
+  }
+
   // ---- F-row demo ----
   const frow = document.querySelector('.frow');
   const out = document.querySelector('.frow-out');
+  const frowLed = document.querySelector('.frow-led');
+  let frowT;
   for (let i = 1; i <= 12; i++) {
     const b = document.createElement('button');
     b.type = 'button';
@@ -614,7 +678,7 @@ footer a{color:var(--ink-2)}
     b.textContent = 'F' + i;
     b.addEventListener('pointerdown', () => b.classList.add('down'));
     ['pointerup', 'pointerleave', 'blur'].forEach(ev => b.addEventListener(ev, () => b.classList.remove('down')));
-    b.addEventListener('click', () => { out.textContent = 'F' + i + ', as a real F' + i + ' key'; });
+    b.addEventListener('click', () => { out.textContent = 'F' + i + ' sent as a real F' + i + ' key'; frowLed.classList.add('on'); clearTimeout(frowT); frowT = setTimeout(() => frowLed.classList.remove('on'), 900); });
     frow.appendChild(b);
   }
 })();

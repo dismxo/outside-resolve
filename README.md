@@ -1,28 +1,25 @@
-<h1 align="center">Outside Resolve</h1>
+<a href="https://dismxo.github.io/outside-resolve/"><img src="docs/banner.png" alt="Outside Resolve: your Editor Keyboard, outside Resolve"></a>
 
 <p align="center">
-  <b>Use the Blackmagic DaVinci Resolve Editor Keyboard everywhere else.</b><br>
-  The search dial controls volume, scroll and zoom. Every editing key runs a macro.<br>
+  The search dial runs volume, scroll and zoom. Every editing key runs a macro.<br>
   The F-row works as F1–F12 without holding Fn.
 </p>
 
 <p align="center">
-  <a href="https://github.com/dismxo/outside-resolve/releases/latest"><img alt="Download" src="https://img.shields.io/github/v/release/dismxo/outside-resolve?label=download&color=f2a33a"></a>
-  <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-3b3d42">
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-3b3d42"></a>
+  <a href="https://github.com/dismxo/outside-resolve/releases/latest"><img alt="Download" src="https://img.shields.io/github/v/release/dismxo/outside-resolve?label=download&color=ffae38&labelColor=211f1c&style=for-the-badge"></a>
+  <img alt="Windows" src="https://img.shields.io/badge/windows-10%20%C2%B7%2011-312f2b?labelColor=211f1c&style=for-the-badge">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-312f2b?labelColor=211f1c&style=for-the-badge"></a>
 </p>
 
 <p align="center">
-  <a href="https://dismxo.github.io/outside-resolve/">Project page</a> ·
-  <a href="https://github.com/dismxo/outside-resolve/releases/latest">Download</a> ·
-  <a href="#how-it-works">How it works</a>
+  <a href="https://dismxo.github.io/outside-resolve/"><b>Project page</b></a> ·
+  <a href="https://github.com/dismxo/outside-resolve/releases/latest"><b>Download</b></a> ·
+  <a href="#how-it-works"><b>How it works</b></a>
 </p>
 
-<p align="center">
-  <img src="docs/screenshot.png" width="560" alt="The Outside Resolve window: dial mode, profiles, key mappings and dial tuning">
-</p>
-
----
+> [!NOTE]
+> Outside Resolve is an independent, unofficial project. It is not made, affiliated with or
+> endorsed by Blackmagic Design. It is a free community tool for people who own the keyboard.
 
 Outside DaVinci Resolve, the Editor Keyboard is just a QWERTY keyboard. The search dial and
 the editing keys stay silent until the computer completes Blackmagic's authentication
@@ -77,6 +74,10 @@ Nothing else: no Zadig, no driver changes. The small Speed Editor is detected to
 has not been tested.
 
 ## Using it
+
+<p align="center">
+  <img src="docs/screenshot.png" width="520" alt="The Outside Resolve window: dial mode, profiles, key mappings and dial tuning">
+</p>
 
 **Dial mode.** Press `SHTL`, `JOG` or `SCRL` on the keyboard. The highlighted chip in the
 window and the tray tooltip show the active mode.
