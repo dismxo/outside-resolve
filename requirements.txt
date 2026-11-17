@@ -1,0 +1,4 @@
+# Runtime dependencies. The app talks to the keyboard through Windows directly
+# (editorkbd/hidraw.py), so no HID library is needed.
+pynput>=1.7.6
+PySide6>=6.6.0
